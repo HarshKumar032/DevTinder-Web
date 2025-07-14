@@ -10,7 +10,7 @@ const Connections = () => {
   const dispatch = useDispatch();
   const fetchConnections = async () => {
     try {
-      const res = await axios.get(BASE_URL + "/user/connections", {
+      const res = await axios.get(BASE_URL + "/view/connections", {
         withCredentials: true,
       });
       dispatch(addConnections(res.data.data));
@@ -33,7 +33,7 @@ const Connections = () => {
       <h1 className="text-bold text-white text-3xl">Connections</h1>
 
       {connections.map((connection) => {
-        const { _id, firstName, lastName, photoUrl, age, gender, about } =
+        const { _id, firstName, lastName, photourl, age, gender, about } =
           connection;
 
         return (
@@ -45,7 +45,7 @@ const Connections = () => {
               <img
                 alt="photo"
                 className="w-20 h-20 rounded-full object-cover"
-                src={photoUrl}
+                src={photourl}
               />
             </div>
             <div className="text-left mx-4 ">

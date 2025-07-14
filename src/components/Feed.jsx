@@ -12,18 +12,26 @@ const Feed = () => {
   const getFeed = async () => {
     if (feed) return;
     try {
-      const res = await axios.get(BASE_URL + "/feed", {
+      const res = await axios.get(BASE_URL + "/view/feed", {
         withCredentials: true,
       });
       dispatch(addFeed(res?.data?.data));
     } catch (err) {
       //TODO: handle error
+      console.error(err);
     }
   };
 
   useEffect(() => {
-    getFeed();
-  }, []);
+    if (!feed || feed.length === 0) {
+      getFeed();
+    }
+  }, [feed]);
+
+  const handleDecision = (userId) => {
+    dispatch(removeUserFromFeed(userId)); // feed shrinks; effect above refills
+  };
+
   if (!feed) return;
 
   if (feed.length <= 0)
@@ -32,7 +40,7 @@ const Feed = () => {
   return (
     feed && (
       <div className="flex justify-center my-10">
-        <UserCard user={feed[0]} />
+        <UserCard user={feed[0]} onDecision={handleDecision} />
       </div>
     )
   );

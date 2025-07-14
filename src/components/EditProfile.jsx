@@ -4,20 +4,21 @@ import axios from "axios";
 import { BASE_URL } from "../utils/constants";
 import { useDispatch } from "react-redux";
 import { addUser } from "../utils/userSlice";
+import { useNavigate } from "react-router-dom";
 
 const EditProfile = ({ user }) => {
   const [firstName, setFirstName] = useState(user.firstName);
   const [lastName, setLastName] = useState(user.lastName);
-  const [photoUrl, setPhotoUrl] = useState(user.photoUrl);
+  const [photourl, setPhotoUrl] = useState(user.photourl);
   const [age, setAge] = useState(user.age || "");
   const [gender, setGender] = useState(user.gender || "");
   const [about, setAbout] = useState(user.about || "");
   const [error, setError] = useState("");
   const dispatch = useDispatch();
   const [showToast, setShowToast] = useState(false);
+  const navigate = useNavigate();
 
   const saveProfile = async () => {
-    //Clear Errors
     setError("");
     try {
       const res = await axios.patch(
@@ -25,7 +26,7 @@ const EditProfile = ({ user }) => {
         {
           firstName,
           lastName,
-          photoUrl,
+          photourl,
           age,
           gender,
           about,
@@ -36,9 +37,10 @@ const EditProfile = ({ user }) => {
       setShowToast(true);
       setTimeout(() => {
         setShowToast(false);
-      }, 3000);
+        return navigate("/feed"); //  redirect after success
+      }, 1500);
     } catch (err) {
-      setError(err.response.data);
+      setError(err.response?.data || "Failed to save profile.");
     }
   };
 
@@ -78,7 +80,7 @@ const EditProfile = ({ user }) => {
                   </div>
                   <input
                     type="text"
-                    value={photoUrl}
+                    value={photourl}
                     className="input input-bordered w-full max-w-xs"
                     onChange={(e) => setPhotoUrl(e.target.value)}
                   />
@@ -127,7 +129,7 @@ const EditProfile = ({ user }) => {
           </div>
         </div>
         <UserCard
-          user={{ firstName, lastName, photoUrl, age, gender, about }}
+          user={{ firstName, lastName, photourl, age, gender, about }}
         />
       </div>
       {showToast && (
